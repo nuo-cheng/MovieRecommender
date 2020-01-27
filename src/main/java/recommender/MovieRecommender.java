@@ -1,5 +1,10 @@
 package recommender;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 /** recommender.MovieRecommender. A class that is responsible for:
@@ -37,17 +42,59 @@ public class MovieRecommender {
      * @param movieFilename csv file that contains movie information.
      *
      */
-    private void loadMovies(String movieFilename) {
+    public void loadMovies(String movieFilename) {
         // FILL IN CODE
+        String line = "";
+        String splitBy = ",";
+        try(BufferedReader br = new BufferedReader(new FileReader(movieFilename))){
+            while ((line = br.readLine()) != null){
+                String[] movie = line.split(splitBy, 2);
+                assert(movie.length != 0);
+                if (movie.length < 2) {
+                    System.out.println("id " + movie[0] + " has no movie name");
+                }
+                System.out.println("id" + movie[0] + "    " + movie[1]);
+                if(Character.isDigit(movie[0].charAt(0))){
+                    int movieId = Integer.parseInt(movie[0]);
+                    movieMap.put(movieId, movie[1]);
+                }
+            }
+            System.out.println(movieMap);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public String toString() {
+        return "MovieRecommender{" +
+                "movieMap=" + movieMap +
+                '}';
     }
 
     /**
      * Load users' movie ratings from the file into recommender.UsersList
      * @param ratingsFilename name of the file that contains ratings
      */
-    private void loadRatings(String ratingsFilename) {
+    public void loadRatings(String ratingsFilename) {
         // FILL IN CODE
+        String line = "";
+        String splitBy = ",";
+        try(BufferedReader br = new BufferedReader(new FileReader(ratingsFilename))){
+            while ((line = br.readLine()) != null){
+                String[] rating = line.split(splitBy, 4);
+                assert(rating.length != 0);
+                System.out.println("userId" + rating[0] + "    " + "movieId" + rating[1] + "   " + "rating" + rating[2] +"   "+ "time" + rating[3]);
+                if (Character.isDigit(rating[0].charAt(0))){
+                    int userId = Integer.parseInt(rating[0]);
+                    int movieId = Integer.parseInt(rating[1]);
+                    float rate = Float.parseFloat(rating[2]);
+                    usersData.insert(userId, movieId, rate);
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
 
