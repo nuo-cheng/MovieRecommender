@@ -42,7 +42,7 @@ public class MovieRecommender {
      * @param movieFilename csv file that contains movie information.
      *
      */
-    public void loadMovies(String movieFilename) {
+    private void loadMovies(String movieFilename) {
         // FILL IN CODE
         String line = "";
         String splitBy = ",";
@@ -76,7 +76,7 @@ public class MovieRecommender {
      * Load users' movie ratings from the file into recommender.UsersList
      * @param ratingsFilename name of the file that contains ratings
      */
-    public void loadRatings(String ratingsFilename) {
+    private void loadRatings(String ratingsFilename) {
         // FILL IN CODE
         String line = "";
         String splitBy = ",";

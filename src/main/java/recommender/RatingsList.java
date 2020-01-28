@@ -132,8 +132,15 @@ public class RatingsList implements Iterable<RatingNode> {
      */
     public RatingsList getNBestRankedMovies(int n) {
         // FILL IN CODE
-
-        return null; // don't forget to change
+        RatingsList nBestRatings = new RatingsList();
+        Iterator<RatingNode> it = iterator();
+        for (int i = 0; i < n; i++) {
+            if (it.hasNext()) {
+                RatingNode currNode = it.next();
+                nBestRatings.insertByRating(currNode.getMovieId(), currNode.getMovieRating());
+            }
+        }
+        return nBestRatings;
     }
 
     /**
@@ -150,9 +157,26 @@ public class RatingsList implements Iterable<RatingNode> {
      * @return recommender.RatingsList containing n lowest ranked movies (ranked by this user)
      */
     public RatingsList getNWorstRankedMovies(int n) {
-
         // FILL IN CODE
-        return null; // don't forget to change
+        RatingsList nWorstRatings = new RatingsList();
+        RatingNode fastNode = head;
+        RatingNode slowNode = head;
+        for (int i = 0; i < n; i++){
+            if (fastNode.next() != null){
+                fastNode = fastNode.next();
+            }
+        }
+        while (fastNode.next()!= null){
+            fastNode = fastNode.next();
+            slowNode = slowNode.next();
+        }
+        for (int j = 0; j < n; j++){
+            nWorstRatings.insertByRating(slowNode.next().getMovieId(), slowNode.next().getMovieRating());
+            slowNode = slowNode.next();
+        }
+
+
+        return nWorstRatings; // don't forget to change
     }
 
     /**

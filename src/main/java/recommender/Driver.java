@@ -11,13 +11,13 @@ public class Driver {
         MovieRecommender recommender = new MovieRecommender();
 
         // movies.csv and ratings.csv are in the input subfolder of the project
-//        recommender.loadData("input/movies.csv","input/ratings.csv");
-//        System.out.println("Loaded movie data...");
-//
-//        recommender.findRecommendations(3, 15, "recommendations");
-//        System.out.println();
-//        recommender.findAntiRecommendations(3, 15, "antiRecommendations");
-        recommender.loadRatings("/Users/nuocheng/Desktop/USF/cs545/project-1/project1-recommender-nuo-cheng/input/ratings.csv");
+        recommender.loadData("input/movies.csv","input/ratings.csv");
+        System.out.println("Loaded movie data...");
+
+        recommender.findRecommendations(3, 15, "recommendations");
+        System.out.println();
+        recommender.findAntiRecommendations(3, 15, "antiRecommendations");
+        //recommender.loadRatings("/Users/nuocheng/Desktop/USF/cs545/project-1/project1-recommender-nuo-cheng/input/ratings.csv");
 
     }
 }
