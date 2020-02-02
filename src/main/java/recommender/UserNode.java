@@ -95,17 +95,15 @@ public class UserNode {
      */
     public int[] getLeastFavoriteMovies(int n) {
         // FILL IN CODE
-        int[] leastFavorite = new int[n];
+        int[] leastFavoriteMovies = new int[n];
         RatingsList nWorstRatedMovies = movieRatings.getNWorstRankedMovies(n);
         Iterator<RatingNode> it = nWorstRatedMovies.iterator();
         for (int i = 0; i < n; i++){
             if (it.hasNext()){
-                leastFavorite[i] = it.next().getMovieId();
+                leastFavoriteMovies[i] = it.next().getMovieId();
             }
         }
-
-
-        return null; // don't forget to change
+        return leastFavoriteMovies; // don't forget to change
     }
 
     /**

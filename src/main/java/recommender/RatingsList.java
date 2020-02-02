@@ -10,12 +10,12 @@ package recommender; /**
  */
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class RatingsList implements Iterable<RatingNode> {
 
     private RatingNode head;
     // Note: you are *not* allowed to store the tail or the size of this list
-
 
     /**
      * Changes the rating for a given movie to newRating. The position of the
@@ -27,6 +27,27 @@ public class RatingsList implements Iterable<RatingNode> {
      */
     public void setRating(int movieId, double newRating) {
         // FILL IN CODE
+        RatingNode previousNode = new RatingNode(0, 1);
+        RatingNode currentNode = head;
+        RatingNode headCopy = head;
+        previousNode.setNext(currentNode);
+        while (currentNode != null){
+            if (currentNode.getMovieId() == movieId){
+                if (currentNode == head) {
+                    head = head.next();
+                }
+                previousNode.setNext(currentNode.next());
+                currentNode.setMovieRating(newRating);
+                int insertMovieId = currentNode.getMovieId();
+                double insertMovieRating = currentNode.getMovieRating();
+                System.out.println("movieId:" + insertMovieId + "   " + " Rating:" + insertMovieRating);
+                insertByRating(insertMovieId, insertMovieRating);
+                break;
+            } else {
+                currentNode = currentNode.next();
+                previousNode = previousNode.next();
+            }
+        }
 
     }
 
@@ -38,6 +59,14 @@ public class RatingsList implements Iterable<RatingNode> {
      */
     public double getRating(int movieId) {
         // FILL IN CODE
+        RatingNode currentNode = head;
+        while (currentNode.next() != null){
+            if (currentNode.getMovieId() == movieId){
+                return currentNode.getMovieRating();
+            } else {
+                currentNode = currentNode.next();
+            }
+        }
         return -1; // don't forget to change it
 
     }
@@ -54,8 +83,52 @@ public class RatingsList implements Iterable<RatingNode> {
      */
     public void insertByRating(int movieId, double rating) {
         // FILL IN CODE. Make sure to test this method thoroughly
+        RatingNode newRating = new RatingNode(movieId, rating);
+        if (head == null){
+            head = newRating;
+        } else {
+            RatingNode previousRating = new RatingNode(1, 1);
+            RatingNode currentRating = head;
+            previousRating.setNext(currentRating);
+            while (currentRating != null){
+                if (rating > currentRating.getMovieRating()){
+                    newRating.setNext(currentRating);
+                    previousRating.setNext(newRating);
+                    if (currentRating == head){
+                        head = newRating;
+                    }
+                    break;
+                } else if (rating == currentRating.getMovieRating()){
+                    if (movieId > currentRating.getMovieId()){
+                        newRating.setNext(currentRating);
+                        previousRating.setNext(newRating);
+                        if (currentRating == head){
+                            head = newRating;
+                        }
+                        break;
+                    } else {
+                        currentRating = currentRating.next();
+                        previousRating = previousRating.next();
+                    }
+                } else {
+                    currentRating = currentRating.next();
+                    previousRating = previousRating.next();
+                }
+            }
+            previousRating.setNext(newRating);
+        }
 
+    }
 
+    @Override
+    public String toString() {
+        String print = "";
+        RatingNode current = head;
+        while(current!=null) {
+            print += "ID" + current.getMovieId() + "  " + "Rating" + current.getMovieRating() + "\n";
+            current = current.next();
+        }
+        return print;
     }
 
     /**
@@ -85,8 +158,25 @@ public class RatingsList implements Iterable<RatingNode> {
      */
     public RatingsList sublist(int begRating, int endRating) {
         RatingsList res = new RatingsList();
-
         // FILL IN CODE
+        res.head = new RatingNode(0, 1);
+        RatingNode currentNode = head;
+        RatingNode resCursor = new RatingNode(0, 1);
+        resCursor.setNext(res.head);
+        while (currentNode!=null && (currentNode.getMovieRating() >= begRating)){
+            if (currentNode.getMovieRating() <= endRating){
+                int newMovieId = currentNode.getMovieId();
+                double newRating = currentNode.getMovieRating();
+                RatingNode newNode = new RatingNode(newMovieId, newRating);
+                //System.out.println(newNode);
+                resCursor.next().setNext(newNode);
+                resCursor.setNext(newNode);
+                currentNode = currentNode.next();
+            } else {
+                currentNode = currentNode.next();
+            }
+        }
+        res.head = res.head.next();
         return res;
     }
 
@@ -94,6 +184,11 @@ public class RatingsList implements Iterable<RatingNode> {
      *  movieId:rating; movieId:rating; movieId:rating;  */
     public void print() {
         // FILL IN CODE
+        RatingNode currentNode = head;
+        while (currentNode != null){
+            System.out.print(currentNode.getMovieId() + ":" + currentNode.getMovieRating() + "; ");
+            currentNode = currentNode.next();
+        }
     }
 
     /**
@@ -104,9 +199,14 @@ public class RatingsList implements Iterable<RatingNode> {
      * @return the middle recommender.RatingNode
      */
     public RatingNode getMiddleNode() {
-
         // FILL IN CODE
-        return null; // don't forget to change it
+        RatingNode fastNode = head;
+        RatingNode slowNode = head;
+        while (fastNode != null && fastNode.next() != null && fastNode.next().next() != null){
+            fastNode = fastNode.next().next();
+            slowNode = slowNode.next();
+        }
+        return slowNode; // don't forget to change it
     }
 
     /**
@@ -118,8 +218,12 @@ public class RatingsList implements Iterable<RatingNode> {
      */
     public double getMedianRating() {
         // FILL IN CODE
-
-        return -1; // don't forget to change it
+        RatingNode middleNode = getMiddleNode();
+        if (middleNode != null){
+            return getMiddleNode().getMovieRating();
+        } else {
+            return -1;
+        }
     }
 
     /**
@@ -190,10 +294,35 @@ public class RatingsList implements Iterable<RatingNode> {
      * @return reversed list
      */
     public RatingsList reverse(RatingNode head) {
-        RatingsList r = new RatingsList();
         // FILL IN CODE
 
-        return r;
+        //Copy original data to a set of new nodes
+        RatingNode originalCursor = head;
+        RatingNode copyList = new RatingNode(head.getMovieId(),head.getMovieRating());
+        RatingNode fakeHead = new RatingNode(0,1);
+        fakeHead.setNext(copyList);
+        originalCursor = originalCursor.next();
+        while (originalCursor != null){
+            RatingNode newNode = new RatingNode(originalCursor.getMovieId(), originalCursor.getMovieRating());
+            copyList.setNext(newNode);
+            copyList = copyList.next();
+            originalCursor = originalCursor.next();
+        }
+
+        //Reverse
+        RatingNode preNode = null;
+        RatingNode currNode = fakeHead.next();
+        RatingNode nextNode = null;
+        while (currNode != null){
+            nextNode = currNode.next();
+            currNode.setNext(preNode);
+            preNode = currNode;
+            currNode = nextNode;
+        }
+        RatingsList reversedList = new RatingsList();
+        reversedList.head = preNode;
+        return reversedList;
+
     }
 
     /**
@@ -214,6 +343,7 @@ public class RatingsList implements Iterable<RatingNode> {
     private class RatingsListIterator implements Iterator<RatingNode> {
 
         // FILL IN CODE: add instance variable(s)
+        private RatingNode currentNode;
 
         /**
          * Creates a new the iterator starting at a given index
@@ -221,7 +351,10 @@ public class RatingsList implements Iterable<RatingNode> {
          */
         public RatingsListIterator(int index) {
             // FILL IN CODE
-
+            currentNode = head;
+            for (int i = 0; i < index; i++){
+                currentNode = currentNode.next();
+            }
         }
 
         /**
@@ -230,8 +363,7 @@ public class RatingsList implements Iterable<RatingNode> {
          */
         public boolean hasNext() {
             // FILL IN CODE
-
-            return true; // don't forget to change
+            return currentNode != null; // don't forget to change
         }
 
         /**
@@ -240,7 +372,13 @@ public class RatingsList implements Iterable<RatingNode> {
          */
         public RatingNode next() {
             // FILL IN CODE
-            return null; // don't forget to change
+            if (!hasNext()){
+                System.out.println("No next element.");
+                throw new NoSuchElementException();
+            }
+            RatingNode ratingNode = currentNode;
+            currentNode = currentNode.next();
+            return ratingNode; // don't forget to change
         }
 
         public void remove() {
@@ -248,6 +386,33 @@ public class RatingsList implements Iterable<RatingNode> {
             throw new UnsupportedOperationException();
         }
 
+    }
+
+    public static void main(String[] args) {
+        RatingsList aList = new RatingsList();
+        aList.insertByRating(1, 4.0);
+        aList.insertByRating(2, 4.0);
+        aList.insertByRating(3, 2.0);
+        aList.insertByRating(6, 1.5);
+        aList.insertByRating(5, 2.5);
+        aList.insertByRating(4,4.0);
+        aList.insertByRating(8,4.0);
+        aList.insertByRating(11, 3.5);
+        System.out.println(aList);
+
+//        RatingsList reversedAList =  aList.reverse(aList.head);
+//        System.out.println(reversedAList);
+        System.out.println(aList.getMiddleNode());
+        System.out.println(aList.getMedianRating());
+
+//        aList.print();
+
+//        aList.setRating(2,3.0);
+//        System.out.println(aList);
+//        System.out.println(aList.getRating(3));
+        System.out.println(aList.sublist(1,3));
+        System.out.println(aList.getNBestRankedMovies(9));
+        System.out.println(aList.getNWorstRankedMovies(9));
     }
 
 }

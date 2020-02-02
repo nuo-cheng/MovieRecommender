@@ -25,7 +25,30 @@ public class UsersList {
         // if not, create it and append to this list.
         // Then call insert(movieId, rating) method on the recommender.UserNode
         // FILL IN CODE
+        if (head == null){
+            head = new UserNode(-1);
+        }
 
+        if (head.next() == null){
+            UserNode newUserNode = new UserNode(userId);
+            head.setNext(newUserNode);
+            newUserNode.insert(movieId, rating);
+            tail = new UserNode(-1);
+            tail.setNext(newUserNode);
+        } else {
+            UserNode currentNode = head.next();
+            while (currentNode != null){
+                if (currentNode.getId() == userId){
+                    currentNode.insert(movieId, rating);
+                    return;
+                } else {
+                    currentNode = currentNode.next();
+                }
+            }
+            UserNode newUserNode = new UserNode(userId);
+            newUserNode.insert(movieId, rating);
+            append(newUserNode);
+        }
     }
 
     /**
@@ -35,6 +58,8 @@ public class UsersList {
     public void append(UserNode newNode) {
         // This is where tail will come in handy
         // FILL IN CODE
+        tail.next().setNext(newNode);
+        tail.setNext(newNode);
     }
 
     /** Return a recommender.UserNode given userId
@@ -44,6 +69,15 @@ public class UsersList {
      */
     public UserNode get(int userId) {
         // FILL IN CODE
+        UserNode currentNode = head.next();
+        while (currentNode != null){
+            if (currentNode.getId() == userId){
+                return currentNode;
+            } else {
+                currentNode = currentNode.next();
+            }
+        }
+
 
         return null; // don't forget to change it
     } // get method
@@ -77,5 +111,22 @@ public class UsersList {
     public void print(String filename) {
         // FILL IN CODE
 
+    }
+
+    public void debugPrint() {
+        UserNode current = head.next();
+        while(current!=null) {
+            current.print();
+            current = current.next();
+        }
+    }
+
+    public static void main(String[] args) {
+        UsersList newUsersList = new UsersList();
+        newUsersList.insert(4, 2,4.0);
+        newUsersList.insert(3,1,3.5);
+        newUsersList.insert(4,1,5.0);
+        newUsersList.debugPrint();
+        newUsersList.get(4).print();
     }
 }
