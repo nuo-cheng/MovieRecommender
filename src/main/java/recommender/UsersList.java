@@ -103,20 +103,23 @@ public class UsersList {
             thisNode = get(userid);
             //calculate other users similarity
             UserNode currentOtherNode = head.next();
-            while (currentOtherNode != null && currentOtherNode.getId() != userid){
+            while (currentOtherNode != null) {
+                if (currentOtherNode.getId() == userid) {
+                    currentOtherNode = currentOtherNode.next();
+                    continue;
+                }
                 similarity = thisNode.computeSimilarity(currentOtherNode);
                 similarityGrade = 1 - Math.abs(similarity);
                 if (similarityGrade < mostSimilarGrade){
                     mostSimilarGrade = similarityGrade;
                     mostSimilarUser = currentOtherNode;
                 } else if (similarityGrade == mostSimilarGrade){
-                    if (currentOtherNode.getId() < mostSimilarUser.getId()){
+                    if (null == mostSimilarUser || currentOtherNode.getId() < mostSimilarUser.getId()){
                         mostSimilarUser = currentOtherNode;
                     }
                 }
                 currentOtherNode = currentOtherNode.next();
             }
-
         }
         return mostSimilarUser;
 
@@ -145,11 +148,12 @@ public class UsersList {
     public static void main(String[] args) {
         UsersList newUsersList = new UsersList();
         newUsersList.insert(4, 2,5.0);
-        newUsersList.insert(3,1,3.5);
+        newUsersList.insert(3,1,4.5);
         newUsersList.insert(4,1,5.0);
         newUsersList.debugPrint();
 //        newUsersList.get(4).print();
-        UserNode newUserNode = newUsersList.head.next();
-        newUserNode.getFavoriteMovies(2);
+//        UserNode newUserNode = newUsersList.head.next();
+//        newUserNode.getFavoriteMovies(2);
+        System.out.println(newUsersList.findMostSimilarUser(3));
     }
 }

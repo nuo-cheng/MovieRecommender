@@ -168,9 +168,12 @@ public class RatingsList implements Iterable<RatingNode> {
                 sumOfYSquare += ySquare;
 
                 countOfN += 1;
+                currentNode = currentNode.next();
+            } else {
+                currentNode = currentNode.next();
             }
         }
-        similarity = (countOfN * sumOfXY - sumOfX * sumOfY) / Math.sqrt(countOfN * sumOfXSquare - sumOfX * sumOfX) * Math.sqrt(countOfN * sumOfYSquare - sumOfY * sumOfY);
+        similarity = (countOfN * sumOfXY - sumOfX * sumOfY) / (Math.sqrt(countOfN * sumOfXSquare - sumOfX * sumOfX) * Math.sqrt(countOfN * sumOfYSquare - sumOfY * sumOfY));
         return similarity;
 
     }
@@ -182,6 +185,7 @@ public class RatingsList implements Iterable<RatingNode> {
             mapOfIdAndRating.put(
                     currentNode.getMovieId(),
                     currentNode.getMovieRating());
+            currentNode = currentNode.next();
         }
         return mapOfIdAndRating;
     }
@@ -304,16 +308,18 @@ public class RatingsList implements Iterable<RatingNode> {
         RatingsList nWorstRatings = new RatingsList();
         RatingNode fastNode = head;
         RatingNode slowNode = head;
+        int availbleNodeCnt = 0;
         for (int i = 0; i < n; i++){
             if (fastNode.next() != null){
                 fastNode = fastNode.next();
+                availbleNodeCnt++;
             }
         }
         while (fastNode.next()!= null){
             fastNode = fastNode.next();
             slowNode = slowNode.next();
         }
-        for (int j = 0; j < n; j++){
+        for (int j = 0; j < availbleNodeCnt; j++){
             nWorstRatings.insertByRating(slowNode.next().getMovieId(), slowNode.next().getMovieRating());
             slowNode = slowNode.next();
         }
