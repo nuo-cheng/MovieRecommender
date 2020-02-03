@@ -9,6 +9,7 @@ package recommender; /**
  * but all methods are required for the assignment.
  */
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -142,11 +143,49 @@ public class RatingsList implements Iterable<RatingNode> {
     public double computeSimilarity(RatingsList otherList) {
         double similarity = 0;
         // FILL IN CODE
+        HashMap<Integer, Double> otherRating = hashRating(otherList.head);
+        //define some variables
+        double sumOfX = 0;
+        double sumOfY = 0;
+        double sumOfXY = 0;
+        double sumOfXSquare = 0;
+        double sumOfYSquare = 0;
+        int countOfN = 0;
 
+        RatingNode currentNode = head;
+        while(currentNode != null){
+            if (otherRating.get(currentNode.getMovieId()) != null){
+                double x = currentNode.getMovieRating();
+                double y = otherRating.get(currentNode.getMovieId());
+                double xy = x * y;
+                double xSquare = x * x;
+                double ySquare = y * y;
 
+                sumOfX += x;
+                sumOfY += y;
+                sumOfXY += xy;
+                sumOfXSquare += xSquare;
+                sumOfYSquare += ySquare;
+
+                countOfN += 1;
+            }
+        }
+        similarity = (countOfN * sumOfXY - sumOfX * sumOfY) / Math.sqrt(countOfN * sumOfXSquare - sumOfX * sumOfX) * Math.sqrt(countOfN * sumOfYSquare - sumOfY * sumOfY);
         return similarity;
 
     }
+
+    private HashMap<Integer, Double> hashRating(RatingNode head){
+        HashMap<Integer, Double> mapOfIdAndRating = new HashMap<Integer, Double>();
+        RatingNode currentNode = head;
+        while (currentNode != null){
+            mapOfIdAndRating.put(
+                    currentNode.getMovieId(),
+                    currentNode.getMovieRating());
+        }
+        return mapOfIdAndRating;
+    }
+
     /**
      * Returns a sublist of this list where the rating values are in the range
      * from begRating to endRating, inclusive.

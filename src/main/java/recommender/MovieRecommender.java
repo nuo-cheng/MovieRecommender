@@ -1,10 +1,6 @@
 package recommender;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
 import java.util.HashMap;
 
 /** recommender.MovieRecommender. A class that is responsible for:
@@ -117,6 +113,23 @@ public class MovieRecommender {
         // Recommend only the movies that userid has not seen (has not
         // rated).
         // FILL IN CODE
+        String res = "";
+        UserNode thisUser = usersData.get(userid);
+        UserNode mostSimilarUser = usersData.findMostSimilarUser(userid);
+        int[] favoriteMovies = mostSimilarUser.getFavoriteMovies(num);
+        for (int i = 0; i < favoriteMovies.length; i++){
+            if (!thisUser.hasRated(favoriteMovies[i])){
+                res += movieMap.get(favoriteMovies[i]);
+            }
+        }
+        try {
+            BufferedWriter out = new BufferedWriter((new FileWriter(filename)));
+            out.write(res);
+            out.close();
+        } catch (IOException e){
+
+        }
+
 
     }
 
@@ -140,6 +153,23 @@ public class MovieRecommender {
         // Anti-recommend only the movies that userid has not seen (has not
         // rated).
         // FILL IN CODE
+        String res = "";
+        UserNode thisUser = usersData.get(userid);
+        usersData.findMostSimilarUser(userid);
+        UserNode mostSimilarUser = usersData.findMostSimilarUser(userid);
+        int[] antiMovies = mostSimilarUser.getLeastFavoriteMovies(num);
+        for (int i = 0; i < antiMovies.length; i++){
+            if (!thisUser.hasRated(antiMovies[i])){
+                res += movieMap.get(antiMovies[i]);
+            }
+        }
+        try {
+            BufferedWriter out = new BufferedWriter((new FileWriter(filename)));
+            out.write(res);
+            out.close();
+        } catch (IOException e){
+
+        }
     }
 
 }

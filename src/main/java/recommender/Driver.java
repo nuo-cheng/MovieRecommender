@@ -17,7 +17,6 @@ public class Driver {
         recommender.findRecommendations(3, 15, "recommendations");
         System.out.println();
         recommender.findAntiRecommendations(3, 15, "antiRecommendations");
-        //recommender.loadRatings("/Users/nuocheng/Desktop/USF/cs545/project-1/project1-recommender-nuo-cheng/input/ratings.csv");
 
     }
 }

@@ -77,15 +77,17 @@ public class UserNode {
     public int[] getFavoriteMovies(int n) {
         // FILL IN CODE
         int[] favoriteMovies = new int[n];
-        RatingsList nBestRatedMovies = movieRatings.getNBestRankedMovies(n);
+        RatingsList nBestRatedMovies = movieRatings.getNBestRankedMovies(n).sublist(5,5);
         Iterator<RatingNode> it = nBestRatedMovies.iterator();
         for (int i = 0; i < n; i++){
             if (it.hasNext()) {
                 favoriteMovies[i] = it.next().getMovieId();
+                System.out.println(favoriteMovies[i]);
             }
         }
         return favoriteMovies;
     }
+
 
     /**
      * Returns an array of movies the user likes the least (up to n).
@@ -96,7 +98,7 @@ public class UserNode {
     public int[] getLeastFavoriteMovies(int n) {
         // FILL IN CODE
         int[] leastFavoriteMovies = new int[n];
-        RatingsList nWorstRatedMovies = movieRatings.getNWorstRankedMovies(n);
+        RatingsList nWorstRatedMovies = movieRatings.getNWorstRankedMovies(n).sublist(1,1);
         Iterator<RatingNode> it = nWorstRatedMovies.iterator();
         for (int i = 0; i < n; i++){
             if (it.hasNext()){
@@ -116,6 +118,10 @@ public class UserNode {
      */
     public double computeSimilarity(UserNode otherUser) {
         return movieRatings.computeSimilarity(otherUser.movieRatings);
+    }
+
+    public boolean hasRated(int movieId){
+        return movieRatings.getRating(movieId) != -1;
     }
 
 }

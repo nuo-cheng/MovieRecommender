@@ -95,8 +95,29 @@ public class UsersList {
     public UserNode findMostSimilarUser(int userid) {
         UserNode mostSimilarUser = null;
         // FILL IN CODE
+        double mostSimilarGrade = 1;
+        double similarityGrade = 0;
+        double similarity = 0;
+        UserNode thisNode = new UserNode(-1);
+        if (head != null){
+            thisNode = get(userid);
+            //calculate other users similarity
+            UserNode currentOtherNode = head.next();
+            while (currentOtherNode != null && currentOtherNode.getId() != userid){
+                similarity = thisNode.computeSimilarity(currentOtherNode);
+                similarityGrade = 1 - Math.abs(similarity);
+                if (similarityGrade < mostSimilarGrade){
+                    mostSimilarGrade = similarityGrade;
+                    mostSimilarUser = currentOtherNode;
+                } else if (similarityGrade == mostSimilarGrade){
+                    if (currentOtherNode.getId() < mostSimilarUser.getId()){
+                        mostSimilarUser = currentOtherNode;
+                    }
+                }
+                currentOtherNode = currentOtherNode.next();
+            }
 
-
+        }
         return mostSimilarUser;
 
     }
@@ -123,10 +144,12 @@ public class UsersList {
 
     public static void main(String[] args) {
         UsersList newUsersList = new UsersList();
-        newUsersList.insert(4, 2,4.0);
+        newUsersList.insert(4, 2,5.0);
         newUsersList.insert(3,1,3.5);
         newUsersList.insert(4,1,5.0);
         newUsersList.debugPrint();
-        newUsersList.get(4).print();
+//        newUsersList.get(4).print();
+        UserNode newUserNode = newUsersList.head.next();
+        newUserNode.getFavoriteMovies(2);
     }
 }
