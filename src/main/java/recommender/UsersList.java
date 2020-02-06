@@ -96,7 +96,7 @@ public class UsersList {
         UserNode mostSimilarUser = null;
         // FILL IN CODE
         double mostSimilarGrade = 1;
-        double similarityGrade = 0;
+//        double similarityGrade = 0;
         double similarity = 0;
         UserNode thisNode = new UserNode(-1);
         if (head != null){
@@ -109,11 +109,10 @@ public class UsersList {
                     continue;
                 }
                 similarity = thisNode.computeSimilarity(currentOtherNode);
-                similarityGrade = 1 - Math.abs(similarity);
-                if (similarityGrade < mostSimilarGrade){
-                    mostSimilarGrade = similarityGrade;
+                if (similarity > mostSimilarGrade){
+                    mostSimilarGrade = similarity;
                     mostSimilarUser = currentOtherNode;
-                } else if (similarityGrade == mostSimilarGrade){
+                } else if (similarity == mostSimilarGrade){
                     if (null == mostSimilarUser || currentOtherNode.getId() < mostSimilarUser.getId()){
                         mostSimilarUser = currentOtherNode;
                     }
@@ -121,6 +120,7 @@ public class UsersList {
                 currentOtherNode = currentOtherNode.next();
             }
         }
+        System.out.println("id---------------------"+ mostSimilarUser.getId());
         return mostSimilarUser;
 
     }
