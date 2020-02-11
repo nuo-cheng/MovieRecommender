@@ -46,19 +46,18 @@ public class MovieRecommender {
             while ((line = br.readLine()) != null){
                 String[] movie = line.split(splitBy);
                 assert(movie.length != 0);
-//                if (movie.length < 2) {
-//                    System.out.println("id " + movie[0] + " has no movie name");
-//                }
-//                System.out.println("id" + movie[0] + "    " + movie[1]);
+                //Check begin with number which is ID
                 if(Character.isDigit(movie[0].charAt(0))){
                     int movieId = Integer.parseInt(movie[0]);
                     String movieName = "";
+                    //get whole movie name
                     for (int i = 1; i + 1 < movie.length; i++) {
                         if (i >= 2) {
                             movieName += ",";
                         }
                         movieName += movie[i];
                     }
+                    //remove ""
                     if (movieName.charAt(0) == '\"') {
                         String movieNameCopy = movieName;
                         movieName = "";
@@ -132,6 +131,7 @@ public class MovieRecommender {
         UserNode mostSimilarUser = usersData.findMostSimilarUser(userid);
         int[] favoriteMovies = mostSimilarUser.getFavoriteMovies(num);
         for (int i = 0; i < favoriteMovies.length; i++){
+            //check the user has not rated
             if (!thisUser.hasRated(favoriteMovies[i])){
                 if (null == movieMap.get(favoriteMovies[i])) {
                     continue;
@@ -177,6 +177,7 @@ public class MovieRecommender {
         UserNode mostSimilarUser = usersData.findMostSimilarUser(userid);
         int[] antiMovies = mostSimilarUser.getLeastFavoriteMovies(num);
         for (int i = 0; i < antiMovies.length; i++){
+            //check the user has not rated
             if (!thisUser.hasRated(antiMovies[i])){
                 if (null == movieMap.get(antiMovies[i])) {
                     continue;

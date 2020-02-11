@@ -1,5 +1,9 @@
 package recommender;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * A custom linked list that stores user info. Each node in the list is of type
  * recommender.UserNode.
@@ -95,12 +99,9 @@ public class UsersList {
     public UserNode findMostSimilarUser(int userid) {
         UserNode mostSimilarUser = null;
         // FILL IN CODE
-        double mostSimilarGrade = 1;
-//        double similarityGrade = 0;
-        double similarity = 0;
-        UserNode thisNode = new UserNode(-1);
+        double mostSimilarGrade = 0.;
         if (head != null){
-            thisNode = get(userid);
+            UserNode thisNode = get(userid);
             //calculate other users similarity
             UserNode currentOtherNode = head.next();
             while (currentOtherNode != null) {
@@ -108,7 +109,7 @@ public class UsersList {
                     currentOtherNode = currentOtherNode.next();
                     continue;
                 }
-                similarity = thisNode.computeSimilarity(currentOtherNode);
+                double similarity = thisNode.computeSimilarity(currentOtherNode);
                 if (similarity > mostSimilarGrade){
                     mostSimilarGrade = similarity;
                     mostSimilarUser = currentOtherNode;
@@ -120,9 +121,7 @@ public class UsersList {
                 currentOtherNode = currentOtherNode.next();
             }
         }
-        System.out.println("id---------------------"+ mostSimilarUser.getId());
         return mostSimilarUser;
-
     }
 
     /** Print recommender.UsersList to a file  with the given name in the following format:
@@ -134,7 +133,20 @@ public class UsersList {
      */
     public void print(String filename) {
         // FILL IN CODE
+        String result = "";
+        UserNode currentNode = head.next();
+        while (currentNode != null){
+            result += currentNode.toString();
+            result += "\n";
+            currentNode = currentNode.next();
+        }
+        try {
+            BufferedWriter out = new BufferedWriter((new FileWriter(filename)));
+            out.write(result);
+            out.close();
+        } catch (IOException e){
 
+        }
     }
 
     public void debugPrint() {
@@ -150,10 +162,12 @@ public class UsersList {
         newUsersList.insert(4, 2,5.0);
         newUsersList.insert(3,1,4.5);
         newUsersList.insert(4,1,5.0);
-        newUsersList.debugPrint();
+        newUsersList.get(4).print();
 //        newUsersList.get(4).print();
 //        UserNode newUserNode = newUsersList.head.next();
 //        newUserNode.getFavoriteMovies(2);
-        System.out.println(newUsersList.findMostSimilarUser(3));
+//        System.out.println(newUsersList.findMostSimilarUser(3));
+//        newUsersList.print("/Users/nuocheng/Desktop/test.txt");
+        newUsersList.print("newTest");
     }
 }

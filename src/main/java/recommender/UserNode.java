@@ -1,6 +1,5 @@
 package recommender;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 
 /** recommender.UserNode. The class represents a node in the recommender.UsersList.
@@ -51,7 +50,16 @@ public class UserNode {
     public void print() {
         System.out.print("(" + userId + ") ");
         movieRatings.print();
+    }
 
+    public String toString(){
+        String result = "(" + userId + ") ";
+        Iterator<RatingNode> it = movieRatings.iterator();
+        while (it.hasNext()){
+            RatingNode nextNode = it.next();
+            result += nextNode.getMovieId() + ":" + nextNode.getMovieRating() + "; ";
+        }
+         return result;
     }
 
 
